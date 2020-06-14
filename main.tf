@@ -113,7 +113,7 @@ resource "aws_db_instance" "football_db" {
   name                 = "football"
   username             = var.db_user
   password             = var.db_pass
-  db_subnet_group_name = aws_db_subnet_group.name
+  db_subnet_group_name = aws_db_subnet_group.db_subnet.name
   tags = {
     Project = var.project_name
     Name    = "Database"
