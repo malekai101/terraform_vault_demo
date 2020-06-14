@@ -20,3 +20,7 @@ variable "project_name" {
   type    = string
   default = "Vault Football Demo"
 }
+
+variable "admin_ip" {
+  type = string
+}
