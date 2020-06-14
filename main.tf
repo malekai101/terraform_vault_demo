@@ -3,7 +3,8 @@ provider "aws" {
 }
 
 resource "aws_vpc" "main_vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
   tags = {
     Project = var.project_name
     Name    = "App Server"
@@ -76,6 +77,7 @@ resource "aws_instance" "application" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.demo_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  key_name               = var.key
 
   tags = {
     Project = var.project_name
@@ -88,6 +90,7 @@ resource "aws_instance" "vault" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.demo_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_vault_http.id]
+  key_name               = var.key
 
   tags = {
     Project = var.project_name

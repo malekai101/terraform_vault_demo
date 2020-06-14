@@ -24,3 +24,7 @@ variable "project_name" {
 variable "admin_ip" {
   type = string
 }
+
+variable "key" {
+  type = string
+}
