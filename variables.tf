@@ -1,7 +1,3 @@
-variable "linux_image_id" {
-  type    = string
-  default = "ami-026dea5602e368e96"
-}
 
 variable "db_pass" {
   type = string

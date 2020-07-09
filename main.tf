@@ -2,6 +2,17 @@ provider "aws" {
   region = var.region
 }
 
+data aws_ami "linux_ami" {
+  most_recent = true
+
+  filter {
+    name = "name"
+    values = ["/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"]
+  }
+
+  owners = ["amazon"]
+}
+
 resource "aws_vpc" "main_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -70,10 +81,8 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-
-
 resource "aws_instance" "application" {
-  ami                    = var.linux_image_id
+  ami                    = data.aws_ami.linux_ami.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.demo_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
@@ -86,7 +95,7 @@ resource "aws_instance" "application" {
 }
 
 resource "aws_instance" "vault" {
-  ami                    = var.linux_image_id
+  ami                    = data.aws_ami.linux_ami.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.demo_subnet.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_vault_http.id]
