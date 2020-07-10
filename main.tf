@@ -6,7 +6,7 @@ data aws_ami "linux_ami" {
   most_recent = true
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 
@@ -23,24 +23,24 @@ resource "aws_vpc" "main_vpc" {
 }
 
 resource "aws_subnet" "demo_subnet" {
-  vpc_id     = aws_vpc.main_vpc.id
-  cidr_block = "10.0.0.0/24"
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.0.0/24"
   availability_zone = "us-east-2a"
 
   tags = {
     Project = var.project_name
-    Name = "tf-example1"
+    Name    = "tf-example1"
   }
 }
 
 resource "aws_subnet" "db_only_subnet" {
-  vpc_id     = aws_vpc.main_vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-2b"
 
   tags = {
     Project = var.project_name
-    Name = "tf-example2"
+    Name    = "tf-example2"
   }
 }
 
@@ -142,8 +142,8 @@ resource "aws_security_group" "allow_pg" {
 }
 
 resource "aws_eip" "application" {
-  instance = aws_instance.application.id
-  vpc      = true
+  instance   = aws_instance.application.id
+  vpc        = true
   depends_on = [aws_internet_gateway.main_gate]
 }
 
@@ -153,11 +153,11 @@ resource "aws_eip_association" "application" {
 }
 
 resource "aws_instance" "application" {
-  ami                    = data.aws_ami.linux_ami.id
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.demo_subnet.id
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
-  key_name               = var.key
+  ami                         = data.aws_ami.linux_ami.id
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.demo_subnet.id
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
+  key_name                    = var.key
   associate_public_ip_address = true
 
   tags = {
@@ -167,8 +167,8 @@ resource "aws_instance" "application" {
 }
 
 resource "aws_eip" "vault" {
-  instance = aws_instance.application.id
-  vpc      = true
+  instance   = aws_instance.application.id
+  vpc        = true
   depends_on = [aws_internet_gateway.main_gate]
 }
 
@@ -178,11 +178,11 @@ resource "aws_eip_association" "vault" {
 }
 
 resource "aws_instance" "vault" {
-  ami                    = data.aws_ami.linux_ami.id
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.demo_subnet.id
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_vault_http.id]
-  key_name               = var.key
+  ami                         = data.aws_ami.linux_ami.id
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.demo_subnet.id
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_vault_http.id]
+  key_name                    = var.key
   associate_public_ip_address = true
 
   tags = {
@@ -202,15 +202,16 @@ resource "aws_db_subnet_group" "db_subnet" {
 
 
 resource "aws_db_instance" "football_db" {
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine               = "postgres"
-  instance_class       = "db.t2.micro"
-  name                 = "football"
-  username             = var.db_user
-  password             = var.db_pass
-  db_subnet_group_name = aws_db_subnet_group.db_subnet.name
+  allocated_storage      = 20
+  storage_type           = "gp2"
+  engine                 = "postgres"
+  instance_class         = "db.t2.micro"
+  name                   = "football"
+  username               = var.db_user
+  password               = var.db_pass
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet.name
   vpc_security_group_ids = [aws_security_group.allow_pg.id]
+  skip_final_snapshot    = true
   tags = {
     Project = var.project_name
     Name    = "Database"
