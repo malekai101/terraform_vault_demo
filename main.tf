@@ -7,8 +7,7 @@ data aws_ami "linux_ami" {
 
   filter {
     name = "name"
-    #values = ["/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-*-x86_64-gp2"]
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"] #amzn-ami-hvm-2016.09.0.20160923-x86_64-gp2
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 
   owners = ["amazon"]
@@ -26,9 +25,22 @@ resource "aws_vpc" "main_vpc" {
 resource "aws_subnet" "demo_subnet" {
   vpc_id     = aws_vpc.main_vpc.id
   cidr_block = "10.0.0.0/24"
+  availability_zone = "us-east-2a"
 
   tags = {
-    Name = "tf-example"
+    Project = var.project_name
+    Name = "tf-example1"
+  }
+}
+
+resource "aws_subnet" "db_only_subnet" {
+  vpc_id     = aws_vpc.main_vpc.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-2b"
+
+  tags = {
+    Project = var.project_name
+    Name = "tf-example2"
   }
 }
 
@@ -104,9 +116,35 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
+resource "aws_security_group" "allow_pg" {
+  name        = "allow_pg"
+  description = "Allow pg traffic"
+  vpc_id      = aws_vpc.main_vpc.id
+
+  ingress {
+    description = "pg from demo"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [aws_subnet.demo_subnet.cidr_block]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_db"
+  }
+}
+
 resource "aws_eip" "application" {
   instance = aws_instance.application.id
   vpc      = true
+  depends_on = [aws_internet_gateway.main_gate]
 }
 
 resource "aws_eip_association" "application" {
@@ -131,6 +169,7 @@ resource "aws_instance" "application" {
 resource "aws_eip" "vault" {
   instance = aws_instance.application.id
   vpc      = true
+  depends_on = [aws_internet_gateway.main_gate]
 }
 
 resource "aws_eip_association" "vault" {
@@ -153,11 +192,11 @@ resource "aws_instance" "vault" {
 }
 
 resource "aws_db_subnet_group" "db_subnet" {
-  subnet_ids = [aws_subnet.demo_subnet.id]
+  subnet_ids = [aws_subnet.demo_subnet.id, aws_subnet.db_only_subnet.id]
 
   tags = {
     Project = var.project_name
-    Name    = "Database subnet"
+    Name    = "Database subnet group"
   }
 }
 
@@ -171,6 +210,7 @@ resource "aws_db_instance" "football_db" {
   username             = var.db_user
   password             = var.db_pass
   db_subnet_group_name = aws_db_subnet_group.db_subnet.name
+  vpc_security_group_ids = [aws_security_group.allow_pg.id]
   tags = {
     Project = var.project_name
     Name    = "Database"
