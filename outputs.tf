@@ -13,4 +13,7 @@ output "app_dns" {
 output "db_endpoint" {
   value = aws_db_instance.football_db.endpoint
 }
+output "ami" {
+  value = data.aws_ami.linux_ami.id
+}
 

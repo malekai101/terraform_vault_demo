@@ -7,7 +7,8 @@ data aws_ami "linux_ami" {
 
   filter {
     name = "name"
-    values = ["/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"]
+    #values = ["/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-*-x86_64-gp2"]
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"] #amzn-ami-hvm-2016.09.0.20160923-x86_64-gp2
   }
 
   owners = ["amazon"]
