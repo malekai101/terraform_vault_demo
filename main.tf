@@ -187,7 +187,7 @@ resource "aws_instance" "vault" {
 
   tags = {
     Project = var.project_name
-    Name    = "Vault Server"
+    Name    = "Vault1 Server"
   }
 }
 
