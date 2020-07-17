@@ -18,7 +18,7 @@ resource "aws_vpc" "main_vpc" {
   enable_dns_hostnames = true
   tags = {
     Project = var.project_name
-    Name    = "App Server"
+    Name    = "Football VPC"
   }
 }
 
@@ -187,7 +187,7 @@ resource "aws_instance" "vault" {
 
   tags = {
     Project = var.project_name
-    Name    = "Vault1 Server"
+    Name    = "Vault Server"
   }
 }
 
