@@ -13,6 +13,17 @@ data aws_ami "linux_ami" {
   owners = ["amazon"]
 }
 
+data aws_ami "vault_ami" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["csmith-vault*"]
+  }
+
+  owners = ["self"]
+}
+
 resource "aws_vpc" "main_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -178,7 +189,7 @@ resource "aws_eip_association" "vault" {
 }
 
 resource "aws_instance" "vault" {
-  ami                         = data.aws_ami.linux_ami.id
+  ami                         = data.aws_ami.vault_ami.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.demo_subnet.id
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id, aws_security_group.allow_vault_http.id]
