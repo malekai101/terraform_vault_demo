@@ -24,7 +24,10 @@
         "most_recent": true
       },
       "ssh_username": "ec2-user",
-      "type": "amazon-ebs"
+      "type": "amazon-ebs",
+      "tags": {
+        "Name": "Csmith Vault {{timestamp}}"
+      }
     }
   ],
   "provisioners": [
