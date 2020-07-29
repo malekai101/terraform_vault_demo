@@ -45,6 +45,11 @@
       "type": "file",
       "source": "vault.hcl",
       "destination": "/tmp/vault.hcl"
+    },
+    {
+      "type": "file",
+      "source": "vault_config.sh",
+      "destination": "/tmp/vault_config.sh"
     }
   ]
 }
