@@ -26,7 +26,7 @@
       "ssh_username": "ec2-user",
       "type": "amazon-ebs",
       "tags": {
-        "Name": "Csmith Vault {{timestamp}}"
+        "Name": "csmith Vault {{timestamp}}"
       }
     }
   ],
@@ -47,9 +47,18 @@
       "destination": "/tmp/vault.hcl"
     },
     {
-      "type": "file",
-      "source": "vault_config.sh",
-      "destination": "/tmp/vault_config.sh"
+      "type": "shell",
+      "inline": [
+        "sudo yum update -y",
+        "sudo shutdown -r now"
+      ],
+      "expect_disconnect": true
+    },
+    {
+      "type": "shell",
+      "pause_before": "30s",
+      "script": "vault_config.sh",
+      "remote_folder": "/tmp"
     }
   ]
 }

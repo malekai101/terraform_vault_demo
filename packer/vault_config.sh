@@ -7,7 +7,6 @@ if [[ -e /tmp/vault ]]; then
     # Move Vault into place
     sudo chown root:root /tmp/vault
     sudo mv /tmp/vault /usr/local/bin/
-    vault -verison
     vault -autocomplete-install
     sudo setcap cap_ipc_lock=+ep /usr/local/bin/vault
     echo "Vault successfully unzipped and placed."
