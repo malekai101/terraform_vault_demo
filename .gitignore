@@ -32,3 +32,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Upload Vault binary for Packer
+packer/vault*.zip 
+
+# Mac ds
+.DS_Store 
