@@ -37,6 +37,11 @@
       "type": "file",
       "source": "vault.service",
       "destination": "/tmp/vault.service"
+    },
+    {
+      "type": "file",
+      "source": "vault.hcl",
+      "destination": "/tmp/vault.hcl"
     }
   ]
 }
