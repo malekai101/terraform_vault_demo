@@ -38,3 +38,6 @@ packer/vault*.zip
 
 # Mac ds
 .DS_Store 
+
+# backend
+terraform.tf
