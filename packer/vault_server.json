@@ -2,6 +2,7 @@
   "variables": {
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "aws_token": "{{env `AWS_SESSION_TOKEN`}}",
     "region": "us-east-2",
     "vault_zip": ""
   },
@@ -12,6 +13,7 @@
       "instance_type": "t2.micro",
       "region": "{{user `region`}}",
       "secret_key": "{{user `aws_secret_key`}}",
+      "token": "{{user `aws_token`}}",
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
