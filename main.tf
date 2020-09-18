@@ -185,6 +185,11 @@ resource "aws_instance" "application2" {
   key_name                    = var.key
   associate_public_ip_address = true
 
+    tags = {
+    Project = var.project_name
+    Name    = "App Server"
+  }
+
 }
 
 
