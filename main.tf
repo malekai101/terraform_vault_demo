@@ -192,6 +192,20 @@ resource "aws_instance" "application2" {
 
 }
 
+resource "aws_instance" "application3" {
+  ami                         = data.aws_ami.linux_ami.id
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.demo_subnet.id
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
+  key_name                    = var.key
+  associate_public_ip_address = true
+
+      tags = {
+    Project = var.project_name
+    Name    = "App Server"
+  }
+}
+
 
 resource "aws_eip" "vault" {
   instance   = aws_instance.application.id
