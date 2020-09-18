@@ -199,6 +199,11 @@ resource "aws_instance" "application3" {
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
   key_name                    = var.key
   associate_public_ip_address = true
+
+      tags = {
+    Project = var.project_name
+    Name    = "App Server"
+  }
 }
 
 
